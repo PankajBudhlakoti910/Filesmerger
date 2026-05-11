@@ -1,6 +1,6 @@
 # DataForge — File Comparison & Analytics Platform
 
-A production-ready web application for comparing CSV and Excel files, built with **React + Vite**, **Firebase**, and deployable to **Vercel** in minutes.
+A production-ready web application for comparing CSV and Excel files, built with **React + Vite**, **Firebase**, and deployable to **Firebase Hosting** in minutes.
 
 ---
 
@@ -13,7 +13,7 @@ A production-ready web application for comparing CSV and Excel files, built with
 5. [Firebase Configuration](#firebase-configuration)
 6. [Environment Variables](#environment-variables)
 7. [GitHub Repository Setup](#github-repository-setup)
-8. [Vercel Deployment](#vercel-deployment)
+8. [Firebase Hosting Deployment](#firebase-hosting-deployment)
 9. [Admin Dashboard](#admin-dashboard)
 10. [Adding New Features](#adding-new-features)
 11. [Firestore Data Schema](#firestore-data-schema)
@@ -45,7 +45,7 @@ A production-ready web application for comparing CSV and Excel files, built with
 | Database    | Firebase Firestore                |
 | Analytics   | Firebase Analytics + custom events|
 | File Parse  | PapaParse (CSV) + SheetJS (Excel) |
-| Deployment  | Vercel                            |
+| Deployment  | Firebase Hosting                  |
 | Version Ctrl| GitHub                            |
 
 ---
@@ -143,7 +143,7 @@ npm run dev
 
 1. Go to **Build → Authentication → Get Started**
 2. Enable **Google** sign-in provider
-3. Add your domain to **Authorized domains** (add `localhost` and your Vercel domain)
+4. Add your domain to **Authorized domains** (add `localhost`, `dataforge-f3a63.web.app`, and `dataforge-f3a63.firebaseapp.com`)
 4. Optionally enable **Email/Password**
 
 ### Step 4: Create Firestore Database
@@ -234,56 +234,128 @@ git push -u origin main
 ```
 
 **Recommended branch strategy:**
-- `main` → production (auto-deploys to Vercel)
+- `main` → production (deploy manually via Firebase CLI or web console)
 - `dev` → staging
 - `feature/*` → feature branches
 
 ---
 
-## Vercel Deployment
+## Firebase Hosting Deployment
 
-### Step 1: Connect Repository
+### Prerequisites
 
-1. Go to https://vercel.com and sign in with GitHub
-2. Click **"Add New → Project"**
-3. Select your `dataforge` repository
-4. Vercel auto-detects Vite — click **Deploy**
+- Firebase CLI installed: `npm install -g firebase-tools`
+- Logged into Firebase: `firebase login`
+- Your Firebase project created (see Firebase Configuration section)
 
-### Step 2: Set Environment Variables in Vercel
-
-1. Go to your Vercel project → **Settings → Environment Variables**
-2. Add each variable from your `.env` file:
-   - `VITE_FIREBASE_API_KEY`
-   - `VITE_FIREBASE_AUTH_DOMAIN`
-   - `VITE_FIREBASE_PROJECT_ID`
-   - `VITE_FIREBASE_STORAGE_BUCKET`
-   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
-   - `VITE_FIREBASE_APP_ID`
-   - `VITE_FIREBASE_MEASUREMENT_ID`
-   - `VITE_ADMIN_EMAILS`
-3. Set scope to **Production** (and optionally Preview)
-
-### Step 3: Trigger Redeploy
-
-After adding env vars:
-1. Go to **Deployments → ⋯ menu on latest → Redeploy**
-2. Your app will be live at `https://dataforge-xyz.vercel.app`
-
-### Step 4: Add Your Vercel Domain to Firebase Auth
-
-1. Firebase Console → Authentication → Settings → Authorized domains
-2. Add your Vercel domain (e.g. `dataforge-xyz.vercel.app`)
-
-### Automatic Deployments
-
-Every `git push` to `main` automatically deploys to production. Pull requests get preview deployments.
+### Step 1: Build the Vite Application
 
 ```bash
-# Deploy a new feature
-git checkout -b feature/my-feature
-# ... make changes ...
-git push origin feature/my-feature
-# → Vercel creates a preview URL for the PR
+# In the dataforge directory
+npm install
+npm run build
+```
+
+This creates a `dist/` folder with the production build.
+
+### Step 2: Verify Firebase Configuration
+
+Check that `firebase.json` is configured correctly:
+
+```json
+{
+  "firestore": {
+    "database": "(default)",
+    "location": "asia-south1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+```
+
+### Step 3: Set Environment Variables
+
+Ensure your `.env` file has correct Firebase values:
+
+```bash
+VITE_FIREBASE_API_KEY=AIzaSyDSAlOWtOm8lKFwUcaKbqr20lfE4x0f-qw
+VITE_FIREBASE_AUTH_DOMAIN=dataforge-f3a63.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=dataforge-f3a63
+VITE_FIREBASE_STORAGE_BUCKET=dataforge-f3a63.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=89877466507
+VITE_FIREBASE_APP_ID=1:89877466507:web:51009f1adb8a047344338e
+VITE_FIREBASE_MEASUREMENT_ID=G-NHKRSCYYZ5
+VITE_ADMIN_EMAILS=admin@yourdomain.com
+```
+
+### Step 4: Deploy to Firebase Hosting
+
+```bash
+# Deploy the production build
+firebase deploy --only hosting
+
+# Or deploy everything (Firestore, Auth, Hosting)
+firebase deploy
+```
+
+Your app will be live at: **https://dataforge-f3a63.web.app**
+
+### Step 5: Add Firebase Hosting Domain to Firebase Auth
+
+This should already be done, but verify:
+
+1. Firebase Console → Authentication → Settings → Authorized Domains
+2. Ensure these domains are listed:
+   - `dataforge-f3a63.web.app`
+   - `dataforge-f3a63.firebaseapp.com`
+   - `localhost` (for local development)
+
+### Step 6: Verify Sign-In Works
+
+1. Visit https://dataforge-f3a63.web.app
+2. Click **Sign In**
+3. Verify Google OAuth or Email/Password works without `auth/unauthorized-domain` error
+4. If errors occur, check browser console (F12 → Console tab)
+
+### Manual Deployments
+
+To deploy after making changes:
+
+```bash
+# Make code changes
+# Commit to git (optional)
+git add .
+git commit -m "your changes"
+
+# Rebuild and deploy
+npm run build
+firebase deploy --only hosting
+```
+
+### Preview Deployments
+
+To preview changes before deploying to production:
+
+```bash
+# Deploy to a preview channel
+firebase hosting:channel:deploy preview-branch
+
+# View the preview URL in the output
+# Production remains unchanged until you promote the channel
 ```
 
 ---
