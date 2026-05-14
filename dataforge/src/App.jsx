@@ -8,7 +8,7 @@ import RequestPage   from './pages/RequestPage'
 import LoginPage     from './pages/LoginPage'
 import AdminPage     from './pages/AdminPage'
 import { useAuth }   from './hooks/useAuth'
-import { trackVisit } from './services/analyticsService'
+import { trackVisit, trackLogin } from './services/analyticsService'
 
 function RequireAdmin({ children }) {
   const { admin, loading } = useAuth()
@@ -18,7 +18,14 @@ function RequireAdmin({ children }) {
 
 export default function App() {
   const { user } = useAuth()
-  useEffect(() => { trackVisit(user?.uid) }, []) // eslint-disable-line
+
+  useEffect(() => {
+    if (user === undefined) return
+    if (user) {
+      trackLogin(user)
+    }
+    trackVisit(user?.uid)
+  }, [user])
 
   return (
     <Routes>

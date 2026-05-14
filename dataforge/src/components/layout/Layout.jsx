@@ -3,12 +3,15 @@ import { BarChart3, GitCompare, Merge, Lightbulb, LogIn, LogOut, Shield, Menu, X
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { logOut }  from '../../services/authService'
+import ProfileDropdown from '../ui/ProfileDropdown'
+import ProfileModal from '../ui/ProfileModal'
 
 export default function Layout() {
   const { user, admin } = useAuth()
   const location        = useLocation()
   const navigate        = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
 
   const handleLogout = async () => { await logOut(); navigate('/') }
 
@@ -46,11 +49,10 @@ export default function Layout() {
 
           <div className="hidden md:flex items-center gap-3">
             {user ? (
-              <div className="flex items-center gap-3">
-                {user.photoURL && <img src={user.photoURL} alt="" className="w-7 h-7 rounded-full ring-2 ring-sky-500/30" />}
-                <span className="text-sm text-slate-400 max-w-[120px] truncate">{user.displayName || user.email}</span>
-                <button onClick={handleLogout} className="btn-ghost text-sm py-2 px-3"><LogOut size={14} />Sign out</button>
-              </div>
+              <>
+                <ProfileDropdown onProfileEdit={() => setProfileModalOpen(true)} />
+                <ProfileModal isOpen={profileModalOpen} onClose={() => setProfileModalOpen(false)} />
+              </>
             ) : (
               <Link to="/login" className="btn-primary text-sm py-2"><LogIn size={14} />Sign in</Link>
             )}
@@ -71,7 +73,10 @@ export default function Layout() {
               </Link>
             ))}
             {user
-              ? <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-slate-400"><LogOut size={15} />Sign out</button>
+              ? <button onClick={() => { handleLogout(); setMobileOpen(false) }} 
+                  className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-rose-400">
+                  <LogOut size={15} /> Sign out
+                </button>
               : <Link to="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-sky-400"><LogIn size={15} />Sign in</Link>
             }
           </div>

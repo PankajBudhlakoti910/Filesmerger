@@ -24,6 +24,25 @@ export function getOrCreateSessionId() {
 
 // ── Visit tracking ────────────────────────────────────────────────────────────
 
+export async function trackLogin(user) {
+  if (!user?.uid) return
+
+  try {
+    const userRef = doc(db, 'user_activity', user.uid)
+    await setDoc(userRef, {
+      uid:        user.uid,
+      email:      user.email ?? null,
+      displayName:user.displayName ?? null,
+      lastLogin:  serverTimestamp(),
+      lastActive: serverTimestamp(),
+      updatedAt:  serverTimestamp(),
+      loginCount: increment(1),
+    }, { merge: true })
+  } catch (err) {
+    console.warn('[Analytics] trackLogin failed:', err)
+  }
+}
+
 export async function trackVisit(userId = null) {
   try {
     const sessionId = getOrCreateSessionId()

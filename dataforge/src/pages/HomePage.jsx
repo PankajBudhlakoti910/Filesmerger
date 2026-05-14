@@ -33,9 +33,8 @@ const tools = [
     color: '#f59e0b',
     bg: 'rgba(245,158,11,0.1)',
     title: 'Custom Tool Request',
-    badge: 'Free',
     to: '/request',
-    desc: 'Need something specific? Share your requirement and we\'ll build a custom data tool tailored to your workflow — for free.',
+    desc: 'Need something specific? Share your requirement and we\'ll build a custom data tool tailored to your workflow.',
     features: ['Describe your use case', 'Get a custom-built tool', 'No cost involved', 'Fast turnaround'],
   },
 ]
@@ -62,7 +61,6 @@ const stats = [
   { value: '80+',   label: 'Files merged at once' },
   { value: '100%',  label: 'Browser-based, private' },
   { value: '3',     label: 'Powerful tools' },
-  { value: 'Free',  label: 'No account needed' },
 ]
 
 export default function HomePage() {
@@ -75,7 +73,7 @@ export default function HomePage() {
       <section className="text-center space-y-8" style={{animation:'fadeUp 0.5s ease both'}}>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold mb-2"
           style={{borderColor:'rgba(14,165,233,0.3)', background:'rgba(14,165,233,0.1)', color:'#38bdf8'}}>
-          <BarChart3 size={12} /> Professional Data Tools — Free & Browser-Based
+          <BarChart3 size={12} /> Professional Data Tools — Browser-Based
         </div>
 
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none">
@@ -87,7 +85,7 @@ export default function HomePage() {
 
         <p className="max-w-2xl mx-auto text-lg text-slate-400 leading-relaxed">
           Upload CSV and Excel files, compare differences, merge up to 80 files, run pivot analysis,
-          find duplicates — all free, all in your browser, no login required.
+          find duplicates, all in your browser.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
@@ -198,7 +196,7 @@ export default function HomePage() {
                     <p className="text-slate-300 text-xs leading-relaxed">"I need a tool that compares two GST reports and flags mismatched invoice amounts..."</p>
                   </div>
                   <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-xs text-emerald-300 font-semibold">
-                    ✓ Custom tool built & delivered free
+                    ✓ Custom tool built & delivered
                   </div>
                 </div>
               </>}
@@ -253,7 +251,7 @@ export default function HomePage() {
       <section className="relative glass p-12 overflow-hidden text-center">
         <div className="absolute inset-0 pointer-events-none" style={{background:'linear-gradient(135deg,rgba(14,165,233,0.08),transparent,rgba(139,92,246,0.08))'}} />
         <h2 className="text-3xl font-extrabold text-white relative">Ready to work with your data?</h2>
-        <p className="mt-3 text-slate-400 relative">Free forever. No login required. Runs in your browser.</p>
+        <p className="mt-3 text-slate-400 relative">No login required. Runs in your browser.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4 relative">
           <Link to="/compare" className="btn-primary text-base px-8 py-3">
             <GitCompare size={18} /> Compare Files
