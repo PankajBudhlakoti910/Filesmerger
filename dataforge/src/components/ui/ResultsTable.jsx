@@ -21,12 +21,12 @@ export default function ResultsTable({ columns, rows, diffCol = null, highlightD
 
   return (
     <div className="space-y-3">
-      <div className="overflow-x-auto rounded-xl border border-white/10">
+      <div className="table-wrapper max-h-96 sm:max-h-[600px] rounded-xl border border-white/10">
         <table className="df-table min-w-full">
           <thead>
             <tr>
               {displayCols.map(col => (
-                <th key={col}>{col.replace(/^f[12]_/, '')}</th>
+                <th key={col} className="whitespace-nowrap">{col.replace(/^f[12]_/, '')}</th>
               ))}
             </tr>
           </thead>
@@ -41,7 +41,9 @@ export default function ResultsTable({ columns, rows, diffCol = null, highlightD
                     return (
                       <td
                         key={col}
-                        className={isDiff ? 'text-accent-amber font-medium' : ''}
+                        className={`${isDiff ? 'text-accent-amber font-medium' : ''} whitespace-nowrap max-w-xs overflow-hidden`}
+                        style={{ textOverflow: 'ellipsis' }}
+                        title={String(row[col] ?? '')}
                       >
                         {String(row[col] ?? '')}
                       </td>
@@ -56,23 +58,23 @@ export default function ResultsTable({ columns, rows, diffCol = null, highlightD
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-slate-400">
-          <span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm text-slate-400">
+          <span className="truncate">
             Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, rows.length)} of {rows.length.toLocaleString()}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg hover:bg-white/5 disabled:opacity-30 transition-colors"
+              className="p-1 sm:p-1.5 rounded-lg hover:bg-white/5 disabled:opacity-30 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
-            <span className="font-mono text-xs">{page} / {totalPages}</span>
+            <span className="font-mono text-xs px-2 py-1 rounded">{page} / {totalPages}</span>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="p-1.5 rounded-lg hover:bg-white/5 disabled:opacity-30 transition-colors"
+              className="p-1 sm:p-1.5 rounded-lg hover:bg-white/5 disabled:opacity-30 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

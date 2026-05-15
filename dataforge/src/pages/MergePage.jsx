@@ -338,16 +338,16 @@ export default function MergePage() {
   const mergedColumns = mergedData && mergedData.length > 0 ? Object.keys(mergedData[0]) : []
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <Merge size={28} className="text-violet-400" /> File Merger
+          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <Merge size={24} className="text-violet-400 flex-shrink-0" /> File Merger
           </h1>
-          <p className="text-slate-400 mt-1">Merge up to 80 CSV/Excel files. Auto column mapping. Analyse & export.</p>
+          <p className="text-slate-400 text-sm mt-1">Merge up to 80 CSV/Excel files. Auto column mapping. Analyse & export.</p>
         </div>
-        {filesData.length > 0 && <button onClick={reset} className="btn-ghost"><RotateCcw size={14}/>Reset</button>}
+        {filesData.length > 0 && <button onClick={reset} className="btn-ghost text-xs sm:text-sm py-1.5 sm:py-2.5 flex-shrink-0"><RotateCcw size={14}/>Reset</button>}
       </div>
 
       {error && (
@@ -470,56 +470,56 @@ export default function MergePage() {
 
       {/* STEP 3 — Merged result */}
       {mergedData && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
             {[
               { label:'Files merged',   value:filesData.length,             color:'border-t-violet-500' },
               { label:'Total rows',     value:mergedData.length.toLocaleString(), color:'border-t-violet-500' },
               { label:'Columns',        value:mergedColumns.length,          color:'border-t-sky-500' },
               { label:'Export format',  value:exportFmt.toUpperCase(),       color:'border-t-emerald-500' },
             ].map(({ label, value, color }) => (
-              <div key={label} className={`stat-card border-t-2 ${color}`}>
-                <p className="text-2xl font-bold font-mono text-white">{value}</p>
-                <p className="text-xs text-slate-400">{label}</p>
+              <div key={label} className={`stat-card border-t-2 ${color} p-3 sm:p-5`}>
+                <p className="text-xl sm:text-2xl font-bold font-mono text-white">{value}</p>
+                <p className="text-xs text-slate-400 mt-1">{label}</p>
               </div>
             ))}
           </div>
 
           {/* Download */}
-          <div className="glass p-5 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-semibold text-white">Merged file ready</p>
+          <div className="glass p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="min-w-0">
+              <p className="font-semibold text-white text-sm sm:text-base">Merged file ready</p>
               <p className="text-xs text-slate-400 mt-0.5">{mergedData.length.toLocaleString()} rows · {mergedColumns.length} columns</p>
             </div>
-            <div className="flex gap-3 items-center flex-wrap">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full sm:w-auto flex-shrink-0">
               <div className="flex gap-1">
                 {['csv','excel','json'].map(f => (
                   <button key={f} onClick={() => setExportFmt(f)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase transition-all
+                    className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-semibold uppercase transition-all whitespace-nowrap
                       ${exportFmt===f ? 'bg-violet-500/30 text-violet-300 border border-violet-500/30' : 'bg-white/5 text-slate-400 hover:text-slate-200'}`}>
                     {f}
                   </button>
                 ))}
               </div>
-              <button onClick={handleExport} className="btn-primary"
+              <button onClick={handleExport} className="btn-primary text-xs sm:text-sm py-1.5 sm:py-2.5 whitespace-nowrap"
                 style={{background:'linear-gradient(135deg,#10b981,#059669)'}}>
-                <Download size={16}/>Download {exportFmt.toUpperCase()}
+                <Download size={14}/>Download {exportFmt.toUpperCase()}
               </button>
             </div>
           </div>
 
           {/* Preview table */}
-          <div className="glass p-5 space-y-3">
+          <div className="glass p-3 sm:p-5 space-y-3">
             <p className="text-sm font-semibold text-white">Preview (first 100 rows)</p>
-            <div className="overflow-x-auto rounded-xl border border-white/10 max-h-72 overflow-y-auto">
+            <div className="table-wrapper max-h-72 sm:max-h-96">
               <table className="df-table min-w-full text-xs">
                 <thead className="sticky top-0 z-10">
-                  <tr>{mergedColumns.slice(0,10).map(c => <th key={c}>{c}</th>)}</tr>
+                  <tr>{mergedColumns.slice(0,10).map(c => <th key={c} className="whitespace-nowrap">{c}</th>)}</tr>
                 </thead>
                 <tbody>
                   {mergedData.slice(0,100).map((row, i) => (
-                    <tr key={i}>{mergedColumns.slice(0,10).map(c => <td key={c}>{String(row[c]??'')}</td>)}</tr>
+                    <tr key={i}>{mergedColumns.slice(0,10).map(c => <td key={c} className="whitespace-nowrap">{String(row[c]??'')}</td>)}</tr>
                   ))}
                 </tbody>
               </table>

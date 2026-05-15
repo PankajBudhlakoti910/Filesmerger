@@ -7,6 +7,10 @@ import MergePage     from './pages/MergePage'
 import RequestPage   from './pages/RequestPage'
 import LoginPage     from './pages/LoginPage'
 import AdminPage     from './pages/AdminPage'
+import AboutPage     from './pages/AboutPage'
+import ServicesPage  from './pages/ServicesPage'
+import ContactPage   from './pages/ContactPage'
+import FeedbackPage  from './pages/FeedbackPage'
 import { useAuth }   from './hooks/useAuth'
 import { trackVisit, trackLogin } from './services/analyticsService'
 
@@ -30,12 +34,17 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/"        element={<HomePage />} />
-        <Route path="/compare" element={<ComparePage />} />
-        <Route path="/merge"   element={<MergePage />} />
-        <Route path="/request" element={<RequestPage />} />
-        <Route path="/login"   element={<LoginPage />} />
-        <Route path="/admin"   element={<RequireAdmin><AdminPage /></RequireAdmin>} />
+        <Route path="/"         element={<HomePage />} />
+        <Route path="/features" element={<HomePage section="features" />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/about"    element={<AboutPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/contact"  element={<ContactPage />} />
+        <Route path="/compare"  element={<ComparePage />} />
+        <Route path="/merge"    element={<MergePage />} />
+        <Route path="/request"  element={<RequestPage />} />
+        <Route path="/login"    element={<LoginPage />} />
+        <Route path="/admin"    element={<RequireAdmin><AdminPage /></RequireAdmin>} />
       </Route>
     </Routes>
   )
